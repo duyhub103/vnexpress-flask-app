@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Danh sách Bài báo</title>
+    <style>
+        table { border-collapse: collapse; width: 100%; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        a.button {
+            padding: 4px 8px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+        a.button:hover { background-color: #0056b3; }
+
+        .pagination {
+    text-align: center;
+    margin-top: 20px;
+        }
+        .pagination a {
+            margin: 0 5px;
+            padding: 6px 12px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+        .pagination a:hover {
+            background-color: #0056b3;
+        }
+        .pagination .current-page {
+            margin: 0 10px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Danh sách Bài báo</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Thể loại</th>
+                <th>Tiêu đề</th>
+                <th>Tóm tắt</th>
+                <th>Chi tiết</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for article in articles %}
+            <tr>
+                <td>{{ article.id }}</td>
+                <td>{{ article.category }}</td>
+                <td>{{ article.title }}</td>
+                <td>{{ article.description }}</td>
+                <td><a class="button" href="/article/{{ article.id }}">Chi tiết</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class="pagination">
+        {% if pagination.has_prev %}
+            <a href="{{ url_for('articles', page=1) }}">Đầu</a>
+            <a href="{{ url_for('articles', page=pagination.prev_num) }}">Trang trước</a>
+        {% endif %}
+    
+        <span class="current-page">Trang {{ pagination.page }} / {{ pagination.pages }}</span>
+    
+        {% if pagination.has_next %}
+            <a href="{{ url_for('articles', page=pagination.next_num) }}">Trang sau</a>
+            <a href="{{ url_for('articles', page=pagination.pages) }}">Cuối</a>
+        {% endif %}
+    </div>
+    
+</body>
+</html>

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Tìm kiếm</title>
+</head>
+<body>
+    <h1>Tra cứu bài báo</h1>
+    <form method="get" action="/search">
+        <input type="text" name="q" placeholder="Tìm kiếm..." value="{{ keyword or '' }}">
+        <button type="submit">Tìm</button>
+    </form>
+
+    {% if articles %}
+        <h2>Kết quả: {{ articles|length }} bài</h2>
+        {% for article in articles %}
+            <div style="border-bottom:1px solid #ccc; padding:10px;">
+                <h3><a href="{{ article.url }}" target="_blank">{{ article.title }}</a></h3>
+                <p><b>Ngày:</b> {{ article.publish_date }} | <b>Tác giả:</b> {{ article.author }} | <b>Thể loại:</b> {{ article.category }}</p>
+                <p>{{ article.description }}</p>
+            </div>
+        {% endfor %}
+    {% elif keyword %}
+        <p>Không tìm thấy kết quả cho từ khóa "{{ keyword }}"</p>
+    {% endif %}
+</body>
+</html>

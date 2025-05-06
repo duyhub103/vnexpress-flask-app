@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Chi tiết bài báo</title>
+</head>
+<body>
+    <h1>{{ article.title }}</h1>
+    <p><strong>Ngày đăng:</strong> {{ article.publish_date }}</p>
+    <p><strong>Tác giả:</strong> {{ article.author }}</p>
+    <p><strong>Thể loại:</strong> {{ article.category }}</p>
+    <p><strong>Tóm tắt:</strong> {{ article.description }}</p>
+    <hr>
+    <div>
+        <p>{{ article.page_contents }}</p>
+    </div>
+    <a href="/articles">← Quay lại danh sách</a>
+</body>
+</html>
