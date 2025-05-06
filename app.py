@@ -20,11 +20,21 @@ class ArticleModel(db.Model):
 def home():
     return render_template('home.html')
 
+# @app.route('/articles')
+# def articles():
+#     page = request.args.get('page', 1, type=int)
+#     per_page = 20
+#     pagination = ArticleModel.query.order_by(ArticleModel.id.desc()).paginate(page=page, per_page=per_page)
+#     return render_template('articles.html', articles=pagination.items, pagination=pagination)
 @app.route('/articles')
 def articles():
+    category = request.args.get('category')
     page = request.args.get('page', 1, type=int)
     per_page = 20
-    pagination = ArticleModel.query.order_by(ArticleModel.id.desc()).paginate(page=page, per_page=per_page)
+    query = ArticleModel.query
+    if category:
+        query = query.filter_by(category=category)
+    pagination = query.order_by(ArticleModel.id.desc()).paginate(page=page, per_page=per_page)
     return render_template('articles.html', articles=pagination.items, pagination=pagination)
 
 

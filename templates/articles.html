@@ -3,77 +3,260 @@
 <head>
     <meta charset="UTF-8">
     <title>Danh sách Bài báo</title>
+    <!-- Include Boxicons library -->
+    <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
     <style>
-        table { border-collapse: collapse; width: 100%; }
-        th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
-        th { background-color: #f2f2f2; }
-        a.button {
-            padding: 4px 8px;
-            background-color: #007bff;
+        body {
+            display: flex;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            background-color: #f4f7fa;
+            color: #333;
+            min-height: 100vh;
+        }
+        .sidebar {
+            width: 220px;
+            padding: 20px;
+            background-color: #ffffff;
+            border-right: 1px solid #e0e0e0;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+        }
+        .sidebar h3 {
+            font-size: 1.3em;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 5px;
+        }
+        .sidebar a {
+            display: block;
+            padding: 10px 15px;
+            text-decoration: none;
+            color: #34495e;
+            margin-bottom: 8px;
+            border-radius: 5px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .sidebar a:hover {
+            background-color: #3498db;
+            color: white;
+        }
+        .home-button {
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+            background-color: #3498db;
             color: white;
             text-decoration: none;
-            border-radius: 4px;
+            border-radius: 5px;
+            font-size: 1em;
+            margin-bottom: 20px;
+            transition: background-color 0.3s, color 0.3s;
         }
-        a.button:hover { background-color: #0056b3; }
-
+        .home-button:hover {
+            background-color: #3498db;
+            color: white;
+        }
+        .home-button box-icon {
+            width: 20px;
+            height: 20px;
+            margin-right: 8px;
+        }
+        .main {
+            flex: 1;
+            padding: 30px;
+            background-color: #ffffff;
+        }
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        .topbar h1 {
+            flex: 1;
+            text-align: center;
+            font-size: 2em;
+            color: #2c3e50;
+            margin: 0;
+        }
+        .button.big {
+            font-size: 1em;
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        .button.big:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
+        .button.big:active {
+            transform: translateY(0);
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            background-color: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        th, td {
+            border: 1px solid #e0e0e0;
+            padding: 12px 15px;
+            text-align: left;
+        }
+        th {
+            background-color: #3498db;
+            color: white;
+            font-weight: 600;
+        }
+        tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        tr:hover {
+            background-color: #e9ecef;
+        }
+        /* Style for the icon in the Chi tiết column */
+        td a.detail-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: #3498db;
+            transition: color 0.3s;
+        }
+        td a.detail-icon:hover {
+            color: #2980b9;
+        }
+        td a.detail-icon box-icon {
+            width: 24px;
+            height: 24px;
+        }
         .pagination {
-    text-align: center;
-    margin-top: 20px;
+            text-align: center;
+            margin-top: 30px;
         }
         .pagination a {
             margin: 0 5px;
-            padding: 6px 12px;
-            background-color: #007bff;
+            padding: 8px 16px;
+            background-color: #3498db;
             color: white;
             text-decoration: none;
-            border-radius: 4px;
+            border-radius: 5px;
+            transition: background-color 0.3s, transform 0.2s;
         }
         .pagination a:hover {
-            background-color: #0056b3;
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
+        .pagination casualties {
+            transform: translateY(0);
         }
         .pagination .current-page {
             margin: 0 10px;
             font-weight: bold;
+            color: #2c3e50;
+        }
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                border-right: none;
+                border-bottom: 1px solid #e0e0e0;
+            }
+            .main {
+                padding: 20px;
+            }
+            .topbar h1 {
+                font-size: 1.5em;
+            }
+            .button.big {
+                padding: 8px 16px;
+                font-size: 0.9em;
+            }
+            .home-button {
+                padding: 8px 12px;
+                font-size: 0.9em;
+            }
+            .home-button box-icon {
+                width: 18px;
+                height: 18px;
+            }
+            th, td {
+                padding: 8px 10px;
+                font-size: 0.9em;
+            }
+            td a.detail-icon box-icon {
+                width: 20px;
+                height: 20px;
+            }
         }
     </style>
 </head>
 <body>
-    <h1>Danh sách Bài báo</h1>
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Thể loại</th>
-                <th>Tiêu đề</th>
-                <th>Tóm tắt</th>
-                <th>Chi tiết</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for article in articles %}
-            <tr>
-                <td>{{ article.id }}</td>
-                <td>{{ article.category }}</td>
-                <td>{{ article.title }}</td>
-                <td>{{ article.description }}</td>
-                <td><a class="button" href="/article/{{ article.id }}">Chi tiết</a></td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    <div class="pagination">
-        {% if pagination.has_prev %}
-            <a href="{{ url_for('articles', page=1) }}">Đầu</a>
-            <a href="{{ url_for('articles', page=pagination.prev_num) }}">Trang trước</a>
-        {% endif %}
-    
-        <span class="current-page">Trang {{ pagination.page }} / {{ pagination.pages }}</span>
-    
-        {% if pagination.has_next %}
-            <a href="{{ url_for('articles', page=pagination.next_num) }}">Trang sau</a>
-            <a href="{{ url_for('articles', page=pagination.pages) }}">Cuối</a>
-        {% endif %}
+    <div class="sidebar">
+        <a href="/" class="home-button">
+            <box-icon name='home'></box-icon> Trang Chủ
+        </a>
+        <h3>Thể Loại Bài Báo</h3>
+        <a href="{{ url_for('articles') }}">Tất cả</a>
+        <a href="{{ url_for('articles', category='Giáo dục') }}">Giáo dục</a>
+        <a href="{{ url_for('articles', category='Pháp luật') }}">Pháp luật</a>
+        <a href="{{ url_for('articles', category='Khoa học') }}">Khoa học</a>
     </div>
-    
+
+    <div class="main">
+        <div class="topbar">
+            <h1>Danh Sách Bài báo</h1>
+            <a href="/search" class="button big">Tra cứu</a>
+        </div>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Thể loại</th>
+                    <th>Tiêu đề</th>
+                    <th>Tóm tắt</th>
+                    <th>Tác giả</th>
+                    <th>Chi tiết</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for article in articles %}
+                <tr>
+                    <td>{{ article.id }}</td>
+                    <td>{{ article.category }}</td>
+                    <td>{{ article.title }}</td>
+                    <td>{{ article.description }}</td>
+                    <td>{{ article.author }}</td>
+                    <td>
+                        <a href="/article/{{ article.id }}" class="detail-icon">
+                            <box-icon type='solid' name='comment-detail'></box-icon>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="pagination">
+            {% if pagination.has_prev %}
+                <a href="{{ url_for('articles', page=1, category=request.args.get('category')) }}">«</a>
+                <a href="{{ url_for('articles', page=pagination.prev_num, category=request.args.get('category')) }}">Trang trước</a>
+            {% endif %}
+            <span class="current-page">Trang {{ pagination.page }} / {{ pagination.pages }}</span>
+            {% if pagination.has_next %}
+                <a href="{{ url_for('articles', page=pagination.next_num, category=request.args.get('category')) }}">Trang sau</a>
+                <a href="{{ url_for('articles', page=pagination.pages, category=request.args.get('category')) }}">»</a>
+            {% endif %}
+        </div>
+    </div>
 </body>
 </html>
