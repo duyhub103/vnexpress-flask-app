@@ -54,7 +54,7 @@
             transition: background-color 0.3s, color 0.3s;
         }
         .home-button:hover {
-            background-color: #3498db;
+            background-color: #2980b9;
             color: white;
         }
         .home-button box-icon {
@@ -95,6 +95,45 @@
         }
         .button.big:active {
             transform: translateY(0);
+        }
+        .sort-dropdown {
+            display: inline-block;
+            position: relative;
+        }
+        .sort-dropdown select {
+            padding: 10px 20px 10px 40px; /* Thêm padding bên trái cho icon */
+            font-size: 1em;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            appearance: none;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            outline: none;
+            width: 220px;
+            position: relative;
+        }
+        .sort-dropdown select:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
+        .sort-dropdown select:active {
+            transform: translateY(0);
+        }
+        .sort-dropdown::after {
+            /* content: '\25BC'; */
+            position: absolute;
+            top: 50%;
+            right: 15px;
+            transform: translateY(-50%);
+            color: white;
+            pointer-events: none;
+        }
+        /* Thêm icon filter-alt vào select */
+        .sort-dropdown select {
+            background: #3498db url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M0 0h24v24H0z" fill="none"/><path d="M10 18h4v-2h-4v2zm-4-5h12v-2H6v2zm0-5h16V5H6v2z"/></svg>') no-repeat 10px center;
+            background-size: 20px 20px;
         }
         table {
             border-collapse: collapse;
@@ -188,6 +227,12 @@
                 width: 18px;
                 height: 18px;
             }
+            .sort-dropdown select {
+                padding: 8px 16px 8px 35px; /* Điều chỉnh padding cho icon trên mobile */
+                font-size: 0.9em;
+                width: 180px;
+                background-size: 18px 18px;
+            }
             th, td {
                 padding: 8px 10px;
                 font-size: 0.9em;
@@ -199,28 +244,41 @@
         }
     </style>
 </head>
-<body>
+<body> 
     <div class="sidebar">
         <a href="/" class="home-button">
             <box-icon name='home'></box-icon> Trang Chủ
         </a>
         <h3>Thể Loại Bài Báo</h3>
-        <a href="{{ url_for('articles') }}">Tất cả</a>
-        <a href="{{ url_for('articles', category='Giáo dục') }}">Giáo dục</a>
-        <a href="{{ url_for('articles', category='Pháp luật') }}">Pháp luật</a>
-        <a href="{{ url_for('articles', category='Khoa học') }}">Khoa học</a>
+        <a href="{{ url_for ('articles') }}">Tất cả</a>
+        {% for cat in categories %}
+            <a href="{{ url_for('articles', category=cat[0], sort_by=sort_by) }}" {% if category == cat[0] %}style="color: #3498db;"{% endif %}>
+                {{ cat[0] }}
+            </a>
+        {% endfor %}
     </div>
-
+    
+    
     <div class="main">
         <div class="topbar">
             <h1>Danh Sách Bài báo</h1>
             <a href="/search" class="button big">Tra cứu</a>
+            
+            <!-- Dropdown cho sắp xếp -->
+            <div class="sort-dropdown">
+                <form method="get" action="/articles">
+                    <select name="sort_by" onchange="this.form.submit()">
+                        <option value="newest" {% if sort_by == 'newest' %}selected{% endif %}>Sắp xếp theo mới nhất</option>
+                        <option value="oldest" {% if sort_by == 'oldest' %}selected{% endif %}>Sắp xếp theo cũ nhất</option>
+                    </select>
+                </form>                                
+            </div>
         </div>
         
         <table>
             <thead>
                 <tr>
-                    <th>ID</th>
+                    <th>STT</th>
                     <th>Thể loại</th>
                     <th>Tiêu đề</th>
                     <th>Tóm tắt</th>
@@ -231,7 +289,7 @@
             <tbody>
                 {% for article in articles %}
                 <tr>
-                    <td>{{ article.id }}</td>
+                    <td>{{ start_index + loop.index }}</td> <!-- Tính số thứ tự chính xác -->
                     <td>{{ article.category }}</td>
                     <td>{{ article.title }}</td>
                     <td>{{ article.description }}</td>
@@ -243,20 +301,20 @@
                     </td>
                 </tr>
                 {% endfor %}
-            </tbody>
+            </tbody>                    
         </table>
 
         <div class="pagination">
             {% if pagination.has_prev %}
-                <a href="{{ url_for('articles', page=1, category=request.args.get('category')) }}">«</a>
-                <a href="{{ url_for('articles', page=pagination.prev_num, category=request.args.get('category')) }}">Trang trước</a>
+                <a href="{{ url_for('articles', page=1, category=category, sort_by=sort_by) }}">«</a>
+                <a href="{{ url_for('articles', page=pagination.prev_num, category=category, sort_by=sort_by) }}">Trang trước</a>
             {% endif %}
             <span class="current-page">Trang {{ pagination.page }} / {{ pagination.pages }}</span>
             {% if pagination.has_next %}
-                <a href="{{ url_for('articles', page=pagination.next_num, category=request.args.get('category')) }}">Trang sau</a>
-                <a href="{{ url_for('articles', page=pagination.pages, category=request.args.get('category')) }}">»</a>
+                <a href="{{ url_for('articles', page=pagination.next_num, category=category, sort_by=sort_by) }}">Trang sau</a>
+                <a href="{{ url_for('articles', page=pagination.pages, category=category, sort_by=sort_by) }}">»</a>
             {% endif %}
-        </div>
+        </div>            
     </div>
 </body>
 </html>

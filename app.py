@@ -20,22 +20,66 @@ class ArticleModel(db.Model):
 def home():
     return render_template('home.html')
 
-# @app.route('/articles')
-# def articles():
-#     page = request.args.get('page', 1, type=int)
-#     per_page = 20
-#     pagination = ArticleModel.query.order_by(ArticleModel.id.desc()).paginate(page=page, per_page=per_page)
-#     return render_template('articles.html', articles=pagination.items, pagination=pagination)
 @app.route('/articles')
 def articles():
-    category = request.args.get('category')
+    category = request.args.get('category')  # Lấy danh mục từ query string
     page = request.args.get('page', 1, type=int)
     per_page = 20
+    sort_by = request.args.get('sort_by', 'newest')  # Mặc định sắp xếp theo mới nhất
+
+    # Lấy tất cả danh mục từ cơ sở dữ liệu
+    categories = db.session.query(ArticleModel.category).distinct().all()
+
     query = ArticleModel.query
+
+    # Lọc theo thể loại (danh mục)
     if category:
         query = query.filter_by(category=category)
-    pagination = query.order_by(ArticleModel.id.desc()).paginate(page=page, per_page=per_page)
-    return render_template('articles.html', articles=pagination.items, pagination=pagination)
+
+    # Sắp xếp theo thời gian
+    if sort_by == 'oldest':  # Sắp xếp theo cũ nhất
+        query = query.order_by(ArticleModel.publish_date.asc())  # Sắp xếp theo ngày tăng dần (cũ nhất)
+    else:  # Mặc định sắp xếp theo mới nhất
+        query = query.order_by(ArticleModel.publish_date.desc())  # Sắp xếp theo ngày giảm dần (mới nhất)
+
+    pagination = query.paginate(page=page, per_page=per_page)
+    
+    # Tính số thứ tự
+    start_index = (pagination.page - 1) * pagination.per_page
+    
+    return render_template('articles.html', articles=pagination.items, pagination=pagination, start_index=start_index, sort_by=sort_by, category=category, categories=categories)
+
+
+
+
+from datetime import datetime, timedelta
+
+# @app.route('/articles')
+# def articles():
+#     category = request.args.get('category')  # Lấy danh mục từ query string
+#     page = request.args.get('page', 1, type=int)
+#     per_page = 20
+#     sort_by = request.args.get('sort_by', 'newest')  # Mặc định sắp xếp theo mới nhất
+ 
+#     query = ArticleModel.query
+
+#     # Lọc theo thể loại (danh mục)
+#     if category:
+#         query = query.filter_by(category=category)
+    
+#     # Sắp xếp theo thời gian
+#     if sort_by == 'oldest':  # Sắp xếp theo cũ nhất
+#         query = query.order_by(ArticleModel.publish_date.asc())  # Sắp xếp theo ngày tăng dần (cũ nhất)
+#     else:  # Mặc định sắp xếp theo mới nhất
+#         query = query.order_by(ArticleModel.publish_date.desc())  # Sắp xếp theo ngày giảm dần (mới nhất)
+
+#     pagination = query.paginate(page=page, per_page=per_page)
+    
+#     # Tính số thứ tự
+#     start_index = (pagination.page - 1) * pagination.per_page
+    
+#     return render_template('articles.html', articles=pagination.items, pagination=pagination, start_index=start_index, sort_by=sort_by, category=category)
+
 
 
 @app.route('/search')
