@@ -210,7 +210,7 @@
             <table>
                 <thead>
                     <tr>
-                        <th>ID</th>
+                        <th>STT</th>
                         <th>Thể loại</th>
                         <th>Tiêu đề</th>
                         <th>Tóm tắt</th>
@@ -219,20 +219,20 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for article in articles %}
-                    <tr>
-                        <td>{{ article.id }}</td>
-                        <td>{{ article.category }}</td>
-                        <td>{{ article.title }}</td>
-                        <td>{{ article.description }}</td>
-                        <td>{{ article.author }}</td>
-                        <td>
-                            <a href="/article/{{ article.id }}" class="detail-icon">
-                                <box-icon type='solid' name='comment-detail'></box-icon>
-                            </a>
-                        </td>
-                    </tr>
-                    {% endfor %}
+                        {% for article in articles %}
+                        <tr>
+                            <td>{{ loop.index }}</td>  <!-- STT hiển thị từ 1 -->
+                            <td>{{ article.category }}</td>
+                            <td>{{ article.title }}</td>
+                            <td>{{ article.description }}</td>
+                            <td>{{ article.author }}</td>
+                            <td>
+                                <a href="/article/{{ article.id }}" class="detail-icon">
+                                    <box-icon type='solid' name='comment-detail'></box-icon>
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
                 </tbody>
             </table>
         {% elif keyword %}
@@ -241,6 +241,7 @@
 
         <a class="back-link" href="/articles">
             <box-icon name='arrow-back'></box-icon>
+            Quay về danh sách bài báo
         </a>
     </div>
 </body>
