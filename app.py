@@ -85,15 +85,24 @@ from datetime import datetime, timedelta
 @app.route('/search')
 def search():
     keyword = request.args.get('q')
+    page = request.args.get('page', 1, type=int)
+    per_page = 20
+    pagination = None
+
     if keyword:
-        articles = ArticleModel.query.filter(
+        query = ArticleModel.query.filter(
             ArticleModel.title.ilike(f'%{keyword}%') |
             ArticleModel.description.ilike(f'%{keyword}%') |
             ArticleModel.page_contents.ilike(f'%{keyword}%')
-        ).all()
+        )
+        pagination = query.paginate(page=page, per_page=per_page)
+        articles = pagination.items
     else:
         articles = []
-    return render_template('search.html', articles=articles, keyword=keyword)
+
+    start_index = (page - 1) * per_page
+    return render_template('search.html', articles=articles, keyword=keyword, pagination=pagination, start_index=start_index)
+
 
 @app.route('/article/<int:article_id>')
 def article_detail(article_id):
