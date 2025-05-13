@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Danh sách Bài báo</title>
-    <!-- Include Boxicons library -->
+        <link rel="icon" href="{{ url_for('static', filename='favicon.png') }}" type="image/png">
+    <!-- add thư viện Boxicons -->
     <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
     <style>
         body {
@@ -250,17 +251,24 @@
             <box-icon name='home'></box-icon> Trang Chủ
         </a>
         <h3>Thể Loại Bài Báo</h3>
-        <a href="{{ url_for ('articles') }}">Tất cả</a>
-        {% for cat in categories %}
-            <a href="{{ url_for('articles', category=cat[0], sort_by=sort_by) }}" {% if category == cat[0] %}style="color: #3498db;"{% endif %}>
-                {{ cat[0] }}
+        <a href="{{ url_for('articles', sort_by=sort_by) }}"
+            {% if not category %}style="color: #3498db;"{% endif %}>
+                Tất cả ({{ total_count }})
+        </a>
+        {% for cat, count in categories %}
+            <a href="{{ url_for('articles', category=cat, sort_by=sort_by) }}"
+            {% if category == cat %}style="color: #3498db;"{% endif %}>
+                {{ cat }} ({{ count }})
             </a>
         {% endfor %}
     </div>
     
-    
+
     <div class="main">
         <div class="topbar">
+            <a href="/articles/pdf" class="button big" style="margin-left: 10px;">
+                <box-icon name='download'></box-icon> Tải PDF
+            </a>
             <h1>Danh Sách Bài báo</h1>
             <a href="/search" class="button big">Tra cứu</a>
             
