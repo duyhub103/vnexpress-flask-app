@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import func
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///vnexpress2.db'
@@ -27,8 +28,12 @@ def articles():
     per_page = 20
     sort_by = request.args.get('sort_by', 'newest')  # Mặc định sắp xếp theo mới nhất
 
+    total_count = ArticleModel.query.count()
     # Lấy tất cả danh mục từ cơ sở dữ liệu
-    categories = db.session.query(ArticleModel.category).distinct().all()
+    category_counts = db.session.query(
+    ArticleModel.category,
+    func.count(ArticleModel.id)
+    ).group_by(ArticleModel.category).all()
 
     query = ArticleModel.query
 
@@ -47,7 +52,16 @@ def articles():
     # Tính số thứ tự
     start_index = (pagination.page - 1) * pagination.per_page
     
-    return render_template('articles.html', articles=pagination.items, pagination=pagination, start_index=start_index, sort_by=sort_by, category=category, categories=categories)
+    return render_template(
+    'articles.html',
+    articles=pagination.items,
+    pagination=pagination,
+    start_index=start_index,
+    sort_by=sort_by,
+    category=category,
+    categories=category_counts,
+    total_count=total_count
+)
 
 
 

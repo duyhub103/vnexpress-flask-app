@@ -250,10 +250,14 @@
             <box-icon name='home'></box-icon> Trang Chủ
         </a>
         <h3>Thể Loại Bài Báo</h3>
-        <a href="{{ url_for ('articles') }}">Tất cả</a>
-        {% for cat in categories %}
-            <a href="{{ url_for('articles', category=cat[0], sort_by=sort_by) }}" {% if category == cat[0] %}style="color: #3498db;"{% endif %}>
-                {{ cat[0] }}
+        <a href="{{ url_for('articles', sort_by=sort_by) }}"
+            {% if not category %}style="color: #3498db;"{% endif %}>
+                Tất cả ({{ total_count }})
+        </a>
+        {% for cat, count in categories %}
+            <a href="{{ url_for('articles', category=cat, sort_by=sort_by) }}"
+            {% if category == cat %}style="color: #3498db;"{% endif %}>
+                {{ cat }} ({{ count }})
             </a>
         {% endfor %}
     </div>
