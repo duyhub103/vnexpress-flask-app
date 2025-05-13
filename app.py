@@ -1,6 +1,8 @@
 from flask import Flask, render_template, request
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import func
+from markupsafe import Markup
+import re
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///vnexpress2.db'
@@ -124,6 +126,15 @@ def search():
     start_index = (page - 1) * per_page
     return render_template('search.html', articles=articles, keyword=keyword, sort_by=sort_by, pagination=pagination, start_index=start_index)
 
+
+@app.template_filter('highlight')
+def highlight(text, keyword):
+    if not keyword or not text:
+        return text
+    # Dùng regex để tìm từ khóa bất kể hoa/thường
+    pattern = re.compile(re.escape(keyword), re.IGNORECASE)
+    highlighted = pattern.sub(lambda m: f'<span style="background-color: yellow;">{m.group(0)}</span>', text)
+    return Markup(highlighted)
 
 @app.route('/article/<int:article_id>')
 def article_detail(article_id):

@@ -245,10 +245,10 @@
                         {% for article in articles %}
                         <tr>
                             <td>{{ start_index + loop.index }}</td>
-                            <td>{{ article.category }}</td>
-                            <td>{{ article.title }}</td>
-                            <td>{{ article.description }}</td>
-                            <td>{{ article.author }}</td>
+                            <td>{{ article.category | highlight(keyword) }}</td>
+                            <td>{{ article.title | highlight(keyword) }}</td>
+                            <td>{{ article.description | highlight(keyword) }}</td>
+                            <td>{{ article.author | highlight(keyword) }}</td>
                             <td>
                                 <a href="/article/{{ article.id }}" class="detail-icon">
                                     <box-icon type='solid' name='comment-detail'></box-icon>
