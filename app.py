@@ -85,6 +85,7 @@ from datetime import datetime, timedelta
 @app.route('/search')
 def search():
     keyword = request.args.get('q')
+    sort_by = request.args.get('sort_by', 'newest')
     page = request.args.get('page', 1, type=int)
     per_page = 20
     pagination = None
@@ -95,13 +96,19 @@ def search():
             ArticleModel.description.ilike(f'%{keyword}%') |
             ArticleModel.page_contents.ilike(f'%{keyword}%')
         )
+        # Sắp xếp theo ngày
+        if sort_by == 'oldest':
+            query = query.order_by(ArticleModel.publish_date.asc())
+        else:
+            query = query.order_by(ArticleModel.publish_date.desc())
+
         pagination = query.paginate(page=page, per_page=per_page)
         articles = pagination.items
     else:
         articles = []
 
     start_index = (page - 1) * per_page
-    return render_template('search.html', articles=articles, keyword=keyword, pagination=pagination, start_index=start_index)
+    return render_template('search.html', articles=articles, keyword=keyword, sort_by=sort_by, pagination=pagination, start_index=start_index)
 
 
 @app.route('/article/<int:article_id>')

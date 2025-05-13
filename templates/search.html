@@ -80,6 +80,26 @@
             width: 18px;
             height: 18px;
         }
+        .sort-select {
+            padding: 10px 20px 10px 40px;
+            font-size: 1em;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            appearance: none;
+            background: #3498db url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M0 0h24v24H0z" fill="none"/><path d="M10 18h4v-2h-4v2zm-4-5h12v-2H6v2zm0-5h16V5H6v2z"/></svg>') no-repeat 10px center;
+            background-size: 20px 20px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            outline: none;
+            height: 40px;
+        }
+
+        .sort-select:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
         table {
             width: 100%;
             border-collapse: collapse;
@@ -199,13 +219,16 @@
         <div class="header">
             <h1>Tra cứu bài báo</h1>
             <form class="search-box" method="get" action="/search">
-                <input type="text" name="q" placeholder="Tìm kiếm..." value="{{ keyword or '' }}">
-                <button type="submit">
-                    <box-icon name='search'></box-icon> Tra cứu
-                </button>
+                    <input type="text" name="q" placeholder="Tìm kiếm..." value="{{ keyword or '' }}">
+                    <button type="submit">
+                        <box-icon name='search'></box-icon> Tra cứu
+                    </button>
+                    <select name="sort_by" class="sort-select" onchange="this.form.submit()">
+                        <option value="newest" {% if sort_by == 'newest' %}selected{% endif %}>Sắp xếp theo mới nhất</option>
+                        <option value="oldest" {% if sort_by == 'oldest' %}selected{% endif %}>Sắp xếp theo cũ nhất</option>
+                    </select>
             </form>
         </div>
-
         {% if articles %}
             <table>
                 <thead>
@@ -221,7 +244,7 @@
                 <tbody>
                         {% for article in articles %}
                         <tr>
-                            <td>{{ loop.index }}</td>  <!-- STT hiển thị từ 1 -->
+                            <td>{{ start_index + loop.index }}</td>
                             <td>{{ article.category }}</td>
                             <td>{{ article.title }}</td>
                             <td>{{ article.description }}</td>
