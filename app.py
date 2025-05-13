@@ -99,7 +99,6 @@ from datetime import datetime, timedelta
 #     return render_template('articles.html', articles=pagination.items, pagination=pagination, start_index=start_index, sort_by=sort_by, category=category)
 
 
-
 @app.route('/search')
 def search():
     keyword = request.args.get('q')
@@ -123,10 +122,18 @@ def search():
         pagination = query.paginate(page=page, per_page=per_page)
         articles = pagination.items
     else:
-        articles = []
+        articles = ArticleModel.query.order_by(ArticleModel.publish_date.desc()).limit(5).all()
+        pagination = None
 
     start_index = (page - 1) * per_page
-    return render_template('search.html', articles=articles, keyword=keyword, sort_by=sort_by, pagination=pagination, start_index=start_index)
+    return render_template(
+        'search.html',
+        articles=articles,
+        keyword=keyword,
+        sort_by=sort_by,
+        pagination=pagination,
+        start_index=start_index
+    )
 
 
 @app.template_filter('highlight')
