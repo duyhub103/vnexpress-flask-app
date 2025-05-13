@@ -1,8 +1,10 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, make_response
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import func
 from markupsafe import Markup
+from xhtml2pdf import pisa
 import re
+import io
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///vnexpress2.db'
@@ -149,6 +151,23 @@ def article_detail(article_id):
 
     return render_template('article_detail.html', article=article, related_articles=related_articles)
 
+
+# Route xuất danh sách bài báo thành PDF
+@app.route('/articles/pdf')
+def export_articles_pdf():
+    articles = ArticleModel.query.order_by(ArticleModel.id.desc()).all()
+    html = render_template("articles_pdf.html", articles=articles)
+    
+    result = io.BytesIO()
+    pisa_status = pisa.CreatePDF(html, dest=result)
+    
+    if pisa_status.err:
+        return "Lỗi khi tạo PDF"
+    
+    response = make_response(result.getvalue())
+    response.headers['Content-Type'] = 'application/pdf'
+    response.headers['Content-Disposition'] = 'attachment; filename=danh_sach_bai_bao.pdf'
+    return response
 
 if __name__ == '__main__':
     app.run(debug=True)
