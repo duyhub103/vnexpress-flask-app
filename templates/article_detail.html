@@ -33,6 +33,21 @@
             border-bottom: 2px solid #3498db;
             padding-bottom: 10px;
         }
+        .url {
+            font-size: 0.95em;
+            color: #555;
+            word-break: break-word;
+            margin-bottom: 20px;
+        }
+        .url a {
+            color: #3498db;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        .url a:hover {
+            color: #2980b9;
+            text-decoration: underline;
+        }
         .info {
             margin-bottom: 30px;
             background-color: #f8f9fa;
@@ -59,20 +74,44 @@
             padding: 20px;
             border: 1px solid #e0e0e0;
         }
-        .url {
-            font-size: 0.95em;
-            color: #555;
-            word-break: break-word;
-            margin-bottom: 20px;
+        .related-articles {
+            margin-bottom: 30px;
         }
-        .url a {
+        .related-articles h3 {
+            font-size: 1.3em;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+        .related-articles ul {
+            padding-left: 20px;
+            list-style-type: none; /* Loại bỏ dấu chấm */
+        }
+        .related-articles li {
+            margin-bottom: 15px;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+            transition: background-color 0.3s;
+        }
+        .related-articles li:hover {
+            background-color: #e9ecef;
+        }
+        .related-articles a {
             color: #3498db;
             text-decoration: none;
-            transition: color 0.3s;
+            font-size: 1em;
+            font-weight: 600;
         }
-        .url a:hover {
+        .related-articles a:hover {
             color: #2980b9;
             text-decoration: underline;
+        }
+        .related-articles small {
+            color: #555;
+            font-size: 0.85em;
+            display: block;
+            margin-top: 5px;
         }
         .back-link {
             display: inline-flex;
@@ -113,6 +152,19 @@
                 font-size: 0.95em;
                 padding: 15px;
             }
+            .related-articles h3 {
+                font-size: 1.1em;
+            }
+            .related-articles li {
+                padding: 8px;
+                margin-bottom: 10px;
+            }
+            .related-articles a {
+                font-size: 0.95em;
+            }
+            .related-articles small {
+                font-size: 0.8em;
+            }
             .back-link {
                 padding: 8px 16px;
                 font-size: 0.9em;
@@ -127,7 +179,10 @@
 <body>
     <div class="container">
         <h1>{{ article.title }}</h1>
-
+        <div class="url">
+            <strong>URL:</strong>
+            <a href="{{ article.url }}" target="_blank">{{ article.url }}</a>
+        </div>
         <div class="info">
             <p><strong>Ngày đăng:</strong> {{ article.publish_date }}</p>
             <p><strong>Tác giả:</strong> {{ article.author }}</p>
@@ -139,13 +194,20 @@
             <p>{{ article.page_contents }}</p>
         </div>
 
-        <div class="url">
-            <strong>URL:</strong>
-            <a href="{{ article.url }}" target="_blank">{{ article.url }}</a>
+        <div class="related-articles">
+            <h3>Bài viết liên quan ({{ article.category }})</h3>
+            <ul>
+                {% for related in related_articles %}
+                <li>
+                    <a href="/article/{{ related.id }}">{{ related.title }}</a><br>
+                    <small>Ngày đăng: {{ related.publish_date }} | Tác giả: {{ related.author or "Không rõ" }}</small>
+                </li>
+                {% endfor %}
+            </ul>
         </div>
 
         <a class="back-link" href="/articles">
-            <box-icon name='arrow-back'></box-icon>
+            <box-icon name='arrow-back'></box-icon> Quay lại danh sách
         </a>
     </div>
 </body>

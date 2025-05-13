@@ -136,10 +136,19 @@ def highlight(text, keyword):
     highlighted = pattern.sub(lambda m: f'<span style="background-color: yellow;">{m.group(0)}</span>', text)
     return Markup(highlighted)
 
+
 @app.route('/article/<int:article_id>')
 def article_detail(article_id):
     article = ArticleModel.query.get_or_404(article_id)
-    return render_template('article_detail.html', article=article)
+
+    # Lấy 4 bài viết liên quan cùng danh mục, loại trừ bài hiện tại
+    related_articles = ArticleModel.query.filter(
+        ArticleModel.category == article.category,
+        ArticleModel.id != article.id
+    ).order_by(ArticleModel.publish_date.desc()).limit(4).all()
+
+    return render_template('article_detail.html', article=article, related_articles=related_articles)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
