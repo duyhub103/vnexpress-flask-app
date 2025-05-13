@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Danh sách Bài báo</title>
-    <!-- Include Boxicons library -->
+        <link rel="icon" href="{{ url_for('static', filename='favicon.png') }}" type="image/png">
+    <!-- add thư viện Boxicons -->
     <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
     <style>
         body {
@@ -265,7 +266,9 @@
 
     <div class="main">
         <div class="topbar">
-            <a href="/articles/pdf" class="button big" style="margin-left: 10px;">Xuất PDF</a>
+            <a href="/articles/pdf" class="button big" style="margin-left: 10px;">
+                <box-icon name='download'></box-icon> Tải PDF
+            </a>
             <h1>Danh Sách Bài báo</h1>
             <a href="/search" class="button big">Tra cứu</a>
             

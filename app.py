@@ -156,6 +156,7 @@ def article_detail(article_id):
 @app.route('/articles/pdf')
 def export_articles_pdf():
     articles = ArticleModel.query.order_by(ArticleModel.id.desc()).all()
+
     html = render_template("articles_pdf.html", articles=articles)
     
     result = io.BytesIO()
@@ -167,6 +168,23 @@ def export_articles_pdf():
     response = make_response(result.getvalue())
     response.headers['Content-Type'] = 'application/pdf'
     response.headers['Content-Disposition'] = 'attachment; filename=danh_sach_bai_bao.pdf'
+    return response
+
+
+@app.route('/article/<int:article_id>/pdf')
+def export_article_pdf(article_id):
+    article = ArticleModel.query.get_or_404(article_id)
+    html = render_template("article_pdf.html", article=article)
+    
+    result = io.BytesIO()
+    pisa_status = pisa.CreatePDF(html, dest=result)
+    
+    if pisa_status.err:
+        return "Lỗi khi tạo PDF"
+    
+    response = make_response(result.getvalue())
+    response.headers['Content-Type'] = 'application/pdf'
+    response.headers['Content-Disposition'] = f'attachment; filename=baibao_{article.id}.pdf'
     return response
 
 if __name__ == '__main__':

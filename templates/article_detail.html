@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Chi tiết bài báo</title>
-    <!-- Include Boxicons library -->
+    <link rel="icon" href="{{ url_for('static', filename='favicon.png') }}" type="image/png">
     <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
     <style>
         body {
@@ -48,6 +48,30 @@
             color: #2980b9;
             text-decoration: underline;
         }
+        .button.big {
+            display: inline-flex;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-size: 1em;
+            transition: background-color 0.3s, transform 0.2s;
+            margin-bottom: 20px;
+        }
+        .button.big:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
+        .button.big:active {
+            transform: translateY(0);
+        }
+        .button.big box-icon {
+            width: 20px;
+            height: 20px;
+            margin-right: 8px;
+        }
         .info {
             margin-bottom: 30px;
             background-color: #f8f9fa;
@@ -84,7 +108,7 @@
         }
         .related-articles ul {
             padding-left: 20px;
-            list-style-type: none; /* Loại bỏ dấu chấm */
+            list-style-type: none;
         }
         .related-articles li {
             margin-bottom: 15px;
@@ -165,6 +189,14 @@
             .related-articles small {
                 font-size: 0.8em;
             }
+            .button.big {
+                padding: 8px 16px;
+                font-size: 0.9em;
+            }
+            .button.big box-icon {
+                width: 18px;
+                height: 18px;
+            }
             .back-link {
                 padding: 8px 16px;
                 font-size: 0.9em;
@@ -183,6 +215,9 @@
             <strong>URL:</strong>
             <a href="{{ article.url }}" target="_blank">{{ article.url }}</a>
         </div>
+        <a href="/article/{{ article.id }}/pdf" class="button big">
+            <box-icon name='download'></box-icon> Tải PDF
+        </a>
         <div class="info">
             <p><strong>Ngày đăng:</strong> {{ article.publish_date }}</p>
             <p><strong>Tác giả:</strong> {{ article.author }}</p>
