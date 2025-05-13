@@ -1,2 +1,6 @@
 Flask, render_template, request
 SQLAlchemy
+markupsafe
+xhtml2pdf
+bs4
+newspaper
